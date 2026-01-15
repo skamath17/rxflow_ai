@@ -1,0 +1,95 @@
+LocalID,ParentLocalID,Work Item Type,Title,Description,Tags
+E1,,Epic,PharmIQ Core Platform,"Foundational IP platform for ingesting Rx events, building snapshots, and providing deterministic, auditable pipelines that augment CenterSync.",IP;AI;Pharmacy;BundleRisk;Explainable
+E2,,Epic,Explainable Refill & Bundle Risk Scoring,"Explainable risk scoring for refill abandonment, shipment split, and bundle break risks.",IP;AI;Pharmacy;BundleRisk;Explainable
+E3,,Epic,Bundle-Aware Recommendations & Action Tracking,Bundle-aware intervention recommendations with action and outcome tracking.,IP;AI;Pharmacy;BundleRisk;Explainable
+E4,,Epic,Executive Savings & Ops Risk Dashboard,"Executive and ops dashboards focused on shipment reduction, outreach savings, and risk visibility.",IP;AI;Pharmacy;BundleRisk;Explainable
+E5,,Epic,Bundle & Outreach Risk Simulation,Synthetic member/refill journeys to simulate bundle fragmentation and outreach cost leakage.,IP;AI;Pharmacy;BundleRisk;Explainable
+E6,,Epic,"Security, Compliance & Trust","Compliance guardrails, pseudonymization, and full auditability for regulated healthcare AI.",IP;AI;Pharmacy;BundleRisk;Explainable
+I1,E1,Issue,Define canonical refill & bundle event schema,"Canonical event schema covering refill, PA, OOS, and bundle-relevant lifecycle events.",IP;AI;Pharmacy;BundleRisk;Explainable
+I2,E1,Issue,Build refill event ingestion API,Batch ingestion endpoint with validation and immutable audit logging.,IP;AI;Pharmacy;BundleRisk;Explainable
+I3,E1,Issue,Implement status→bundle-event mapping,Deterministic mapping from source system statuses to bundle-aware canonical events.,IP;AI;Pharmacy;BundleRisk;Explainable
+I4,E1,Issue,Build refill snapshot aggregation,"Aggregate events into snapshot capturing stage, PA state, and bundle timing.",IP;AI;Pharmacy;BundleRisk;Explainable
+I5,E1,Issue,Compute bundle-relevant snapshot metrics,"Age-in-stage, refill timing overlap, refill gap, and bundle alignment indicators.",IP;AI;Pharmacy;BundleRisk;Explainable
+I6,E2,Issue,Detect bundle break & abandonment risk,Explainable scoring to detect likely bundle fragmentation and refill abandonment.,IP;AI;Pharmacy;BundleRisk;Explainable
+I7,E2,Issue,Detect shipment split & fulfillment delay risk,"Explainable scoring to detect shipment splits caused by PA, OOS, or timing delays.",IP;AI;Pharmacy;BundleRisk;Explainable
+I8,E2,Issue,Build explainability layer for bundle risks,Top drivers with evidence explaining why a bundle or shipment is at risk.,IP;AI;Pharmacy;BundleRisk;Explainable
+I9,E2,Issue,Version risk and explainability logic,Persist model and explainability versions for audit and traceability.,IP;AI;Pharmacy;BundleRisk;Explainable
+I10,E3,Issue,Build bundle-aware recommendation engine,Recommend delay/advance/suppress actions to preserve bundles and reduce outreach.,IP;AI;Pharmacy;BundleRisk;Explainable
+I11,E3,Issue,Enforce human-in-loop guardrails,Ensure recommendations require human approval before execution.,IP;AI;Pharmacy;BundleRisk;Explainable
+I12,E3,Issue,Track bundle-preserving actions,Capture actions taken to prevent shipment splits or redundant outreach.,IP;AI;Pharmacy;BundleRisk;Explainable
+I13,E3,Issue,Measure bundle & outreach outcomes,Track shipment reduction and outreach suppression outcomes.,IP;AI;Pharmacy;BundleRisk;Explainable
+I14,E4,Issue,Build ops work queue for bundle risks,Ops queue listing members/refills at risk of bundle break or shipment split.,IP;AI;Pharmacy;BundleRisk;Explainable
+I15,E4,Issue,Build bundle risk case drill-down,"Timeline, drivers, bundle context, and recommended actions.",IP;AI;Pharmacy;BundleRisk;Explainable
+I16,E4,Issue,Build executive savings dashboard,"Shipment reduction, outreach savings, and $ impact metrics.",IP;AI;Pharmacy;BundleRisk;Explainable
+I17,E5,Issue,Generate synthetic bundle scenarios,"Simulate clean bundles, PA-delayed splits, OOS-driven splits.",IP;AI;Pharmacy;BundleRisk;Explainable
+I18,E5,Issue,Parameterize timing & inventory distributions,"Configurable PA, OOS, and refill timing distributions.",IP;AI;Pharmacy;BundleRisk;Explainable
+I19,E5,Issue,Replay bundle risk simulations,Deterministic reset and replay of synthetic scenarios.,IP;AI;Pharmacy;BundleRisk;Explainable
+I20,E6,Issue,Enforce pseudonymization & ID hygiene,Reject non-pseudonymous identifiers across all inputs.,IP;AI;Pharmacy;BundleRisk;Explainable
+I21,E6,Issue,Validate against PHI denylist,Block ingestion of PHI fields.,IP;AI;Pharmacy;BundleRisk;Explainable
+I22,E6,Issue,Audit lineage completeness,Ensure event→snapshot→risk→action traceability.,IP;AI;Pharmacy;BundleRisk;Explainable
+T1,I1,Task,Design,Design approach and data structures,IP;AI;Pharmacy;BundleRisk;Explainable
+T2,I1,Task,Implement,Code implementation,IP;AI;Pharmacy;BundleRisk;Explainable
+T3,I1,Task,Test,Unit/integration tests,IP;AI;Pharmacy;BundleRisk;Explainable
+T4,I2,Task,Design,Design approach and data structures,IP;AI;Pharmacy;BundleRisk;Explainable
+T5,I2,Task,Implement,Code implementation,IP;AI;Pharmacy;BundleRisk;Explainable
+T6,I2,Task,Test,Unit/integration tests,IP;AI;Pharmacy;BundleRisk;Explainable
+T7,I3,Task,Design,Design approach and data structures,IP;AI;Pharmacy;BundleRisk;Explainable
+T8,I3,Task,Implement,Code implementation,IP;AI;Pharmacy;BundleRisk;Explainable
+T9,I3,Task,Test,Unit/integration tests,IP;AI;Pharmacy;BundleRisk;Explainable
+T10,I4,Task,Design,Design approach and data structures,IP;AI;Pharmacy;BundleRisk;Explainable
+T11,I4,Task,Implement,Code implementation,IP;AI;Pharmacy;BundleRisk;Explainable
+T12,I4,Task,Test,Unit/integration tests,IP;AI;Pharmacy;BundleRisk;Explainable
+T13,I5,Task,Design,Design approach and data structures,IP;AI;Pharmacy;BundleRisk;Explainable
+T14,I5,Task,Implement,Code implementation,IP;AI;Pharmacy;BundleRisk;Explainable
+T15,I5,Task,Test,Unit/integration tests,IP;AI;Pharmacy;BundleRisk;Explainable
+T16,I6,Task,Design,Design approach and data structures,IP;AI;Pharmacy;BundleRisk;Explainable
+T17,I6,Task,Implement,Code implementation,IP;AI;Pharmacy;BundleRisk;Explainable
+T18,I6,Task,Test,Unit/integration tests,IP;AI;Pharmacy;BundleRisk;Explainable
+T19,I7,Task,Design,Design approach and data structures,IP;AI;Pharmacy;BundleRisk;Explainable
+T20,I7,Task,Implement,Code implementation,IP;AI;Pharmacy;BundleRisk;Explainable
+T21,I7,Task,Test,Unit/integration tests,IP;AI;Pharmacy;BundleRisk;Explainable
+T22,I8,Task,Design,Design approach and data structures,IP;AI;Pharmacy;BundleRisk;Explainable
+T23,I8,Task,Implement,Code implementation,IP;AI;Pharmacy;BundleRisk;Explainable
+T24,I8,Task,Test,Unit/integration tests,IP;AI;Pharmacy;BundleRisk;Explainable
+T25,I9,Task,Design,Design approach and data structures,IP;AI;Pharmacy;BundleRisk;Explainable
+T26,I9,Task,Implement,Code implementation,IP;AI;Pharmacy;BundleRisk;Explainable
+T27,I9,Task,Test,Unit/integration tests,IP;AI;Pharmacy;BundleRisk;Explainable
+T28,I10,Task,Design,Design approach and data structures,IP;AI;Pharmacy;BundleRisk;Explainable
+T29,I10,Task,Implement,Code implementation,IP;AI;Pharmacy;BundleRisk;Explainable
+T30,I10,Task,Test,Unit/integration tests,IP;AI;Pharmacy;BundleRisk;Explainable
+T31,I11,Task,Design,Design approach and data structures,IP;AI;Pharmacy;BundleRisk;Explainable
+T32,I11,Task,Implement,Code implementation,IP;AI;Pharmacy;BundleRisk;Explainable
+T33,I11,Task,Test,Unit/integration tests,IP;AI;Pharmacy;BundleRisk;Explainable
+T34,I12,Task,Design,Design approach and data structures,IP;AI;Pharmacy;BundleRisk;Explainable
+T35,I12,Task,Implement,Code implementation,IP;AI;Pharmacy;BundleRisk;Explainable
+T36,I12,Task,Test,Unit/integration tests,IP;AI;Pharmacy;BundleRisk;Explainable
+T37,I13,Task,Design,Design approach and data structures,IP;AI;Pharmacy;BundleRisk;Explainable
+T38,I13,Task,Implement,Code implementation,IP;AI;Pharmacy;BundleRisk;Explainable
+T39,I13,Task,Test,Unit/integration tests,IP;AI;Pharmacy;BundleRisk;Explainable
+T40,I14,Task,Design,Design approach and data structures,IP;AI;Pharmacy;BundleRisk;Explainable
+T41,I14,Task,Implement,Code implementation,IP;AI;Pharmacy;BundleRisk;Explainable
+T42,I14,Task,Test,Unit/integration tests,IP;AI;Pharmacy;BundleRisk;Explainable
+T43,I15,Task,Design,Design approach and data structures,IP;AI;Pharmacy;BundleRisk;Explainable
+T44,I15,Task,Implement,Code implementation,IP;AI;Pharmacy;BundleRisk;Explainable
+T45,I15,Task,Test,Unit/integration tests,IP;AI;Pharmacy;BundleRisk;Explainable
+T46,I16,Task,Design,Design approach and data structures,IP;AI;Pharmacy;BundleRisk;Explainable
+T47,I16,Task,Implement,Code implementation,IP;AI;Pharmacy;BundleRisk;Explainable
+T48,I16,Task,Test,Unit/integration tests,IP;AI;Pharmacy;BundleRisk;Explainable
+T49,I17,Task,Design,Design approach and data structures,IP;AI;Pharmacy;BundleRisk;Explainable
+T50,I17,Task,Implement,Code implementation,IP;AI;Pharmacy;BundleRisk;Explainable
+T51,I17,Task,Test,Unit/integration tests,IP;AI;Pharmacy;BundleRisk;Explainable
+T52,I18,Task,Design,Design approach and data structures,IP;AI;Pharmacy;BundleRisk;Explainable
+T53,I18,Task,Implement,Code implementation,IP;AI;Pharmacy;BundleRisk;Explainable
+T54,I18,Task,Test,Unit/integration tests,IP;AI;Pharmacy;BundleRisk;Explainable
+T55,I19,Task,Design,Design approach and data structures,IP;AI;Pharmacy;BundleRisk;Explainable
+T56,I19,Task,Implement,Code implementation,IP;AI;Pharmacy;BundleRisk;Explainable
+T57,I19,Task,Test,Unit/integration tests,IP;AI;Pharmacy;BundleRisk;Explainable
+T58,I20,Task,Design,Design approach and data structures,IP;AI;Pharmacy;BundleRisk;Explainable
+T59,I20,Task,Implement,Code implementation,IP;AI;Pharmacy;BundleRisk;Explainable
+T60,I20,Task,Test,Unit/integration tests,IP;AI;Pharmacy;BundleRisk;Explainable
+T61,I21,Task,Design,Design approach and data structures,IP;AI;Pharmacy;BundleRisk;Explainable
+T62,I21,Task,Implement,Code implementation,IP;AI;Pharmacy;BundleRisk;Explainable
+T63,I21,Task,Test,Unit/integration tests,IP;AI;Pharmacy;BundleRisk;Explainable
+T64,I22,Task,Design,Design approach and data structures,IP;AI;Pharmacy;BundleRisk;Explainable
+T65,I22,Task,Implement,Code implementation,IP;AI;Pharmacy;BundleRisk;Explainable
+T66,I22,Task,Test,Unit/integration tests,IP;AI;Pharmacy;BundleRisk;Explainable
