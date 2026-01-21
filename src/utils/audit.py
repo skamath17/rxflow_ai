@@ -22,6 +22,11 @@ class AuditAction(str, Enum):
     BATCH_PROCESSED = "batch_processed"
     VALIDATION_FAILED = "validation_failed"
     PROCESSING_FAILED = "processing_failed"
+    SNAPSHOT_AGGREGATED = "snapshot_aggregated"
+    SNAPSHOT_QUERIED = "snapshot_queried"
+    SNAPSHOT_UPDATED = "snapshot_updated"
+    METRICS_COMPUTED = "metrics_computed"
+    METRICS_QUERIED = "metrics_queried"
 
 
 class AuditSeverity(str, Enum):
@@ -33,13 +38,17 @@ class AuditSeverity(str, Enum):
 
 
 class AuditRecord(BaseModel):
-    """Individual audit record"""
+    """Immutable audit record"""
     audit_id: str
     timestamp: datetime
     action: AuditAction
     severity: AuditSeverity
     event_id: Optional[str] = None
     batch_id: Optional[str] = None
+    snapshot_id: Optional[str] = None
+    member_id: Optional[str] = None
+    refill_id: Optional[str] = None
+    metrics_id: Optional[str] = None
     source_system: Optional[str] = None
     message: str
     details: Optional[Dict[str, Any]] = None
@@ -280,5 +289,95 @@ class AuditLogger:
             "action_counts": action_counts,
             "average_processing_time_ms": avg_processing_time,
             "batches_processed": len(set(r.batch_id for r in self._audit_trail if r.batch_id)),
-            "events_processed": len(set(r.event_id for r in self._audit_trail if r.event_id))
+            "events_processed": len(set(r.event_id for r in self._audit_trail if r.event_id)),
+            "snapshots_aggregated": len(set(r.snapshot_id for r in self._audit_trail if r.snapshot_id))
         }
+    
+    def log_snapshot_aggregated(self, snapshot_id: str, member_id: str, refill_id: str, 
+                               events_count: int, processing_time_ms: int) -> AuditRecord:
+        """Log snapshot aggregation"""
+        audit_id = self.generate_audit_id("snap")
+        record = AuditRecord(
+            audit_id=audit_id,
+            timestamp=datetime.now(timezone.utc),
+            action=AuditAction.SNAPSHOT_AGGREGATED,
+            severity=AuditSeverity.INFO,
+            snapshot_id=snapshot_id,
+            member_id=member_id,
+            refill_id=refill_id,
+            message=f"Snapshot aggregated with {events_count} events",
+            details={"events_count": events_count},
+            processing_time_ms=processing_time_ms
+        )
+        self._audit_trail.append(record)
+        return record
+    
+    def log_snapshot_queried(self, query_params: Dict[str, Any], results_count: int, 
+                            processing_time_ms: int) -> AuditRecord:
+        """Log snapshot query"""
+        audit_id = self.generate_audit_id("query")
+        record = AuditRecord(
+            audit_id=audit_id,
+            timestamp=datetime.now(timezone.utc),
+            action=AuditAction.SNAPSHOT_QUERIED,
+            severity=AuditSeverity.INFO,
+            message=f"Snapshot query returned {results_count} results",
+            details={"query_params": query_params, "results_count": results_count},
+            processing_time_ms=processing_time_ms
+        )
+        self._audit_trail.append(record)
+        return record
+    
+    def log_snapshot_updated(self, snapshot_id: str, member_id: str, refill_id: str,
+                           event_id: str, processing_time_ms: int) -> AuditRecord:
+        """Log snapshot update"""
+        audit_id = self.generate_audit_id("upd")
+        record = AuditRecord(
+            audit_id=audit_id,
+            timestamp=datetime.now(timezone.utc),
+            action=AuditAction.SNAPSHOT_UPDATED,
+            severity=AuditSeverity.INFO,
+            snapshot_id=snapshot_id,
+            member_id=member_id,
+            refill_id=refill_id,
+            event_id=event_id,
+            message=f"Snapshot updated with event {event_id}",
+            processing_time_ms=processing_time_ms
+        )
+        self._audit_trail.append(record)
+        return record
+    
+    def log_metrics_computed(self, snapshot_id: str, member_id: str, refill_id: str,
+                           risk_score: float, computation_time_ms: int) -> AuditRecord:
+        """Log metrics computation"""
+        audit_id = self.generate_audit_id("metrics")
+        record = AuditRecord(
+            audit_id=audit_id,
+            timestamp=datetime.now(timezone.utc),
+            action=AuditAction.METRICS_COMPUTED,
+            severity=AuditSeverity.INFO,
+            snapshot_id=snapshot_id,
+            member_id=member_id,
+            refill_id=refill_id,
+            message=f"Bundle metrics computed with risk score {risk_score:.2f}",
+            details={"risk_score": risk_score},
+            processing_time_ms=computation_time_ms
+        )
+        self._audit_trail.append(record)
+        return record
+    
+    def log_metrics_queried(self, query_params: Dict[str, Any], results_count: int,
+                          processing_time_ms: int) -> AuditRecord:
+        """Log metrics query"""
+        audit_id = self.generate_audit_id("query")
+        record = AuditRecord(
+            audit_id=audit_id,
+            timestamp=datetime.now(timezone.utc),
+            action=AuditAction.METRICS_QUERIED,
+            severity=AuditSeverity.INFO,
+            message=f"Metrics query returned {results_count} results",
+            details={"query_params": query_params, "results_count": results_count},
+            processing_time_ms=processing_time_ms
+        )
+        self._audit_trail.append(record)
+        return record
