@@ -27,15 +27,23 @@ from ..models.risk import (
     RiskModelConfig
 )
 from ..utils.audit import AuditLogger, AuditAction, AuditSeverity
+from ..utils.version_registry import VersionRegistry
+from ..models.versioning import VersionedArtifactType
 
 
 class BundleRiskScoringEngine:
     """Engine for computing explainable bundle risk scores"""
     
-    def __init__(self, audit_logger: Optional[AuditLogger] = None, config: Optional[RiskModelConfig] = None):
+    def __init__(
+        self,
+        audit_logger: Optional[AuditLogger] = None,
+        config: Optional[RiskModelConfig] = None,
+        version_registry: Optional[VersionRegistry] = None,
+    ):
         """Initialize risk scoring engine"""
         self.audit_logger = audit_logger or AuditLogger()
         self.config = config or RiskModelConfig(model_name="bundle_risk_engine_v1")
+        self.version_registry = version_registry or VersionRegistry()
         
         # Risk assessment storage
         self._risk_cache: Dict[str, Union[BundleBreakRisk, RefillAbandonmentRisk]] = {}
@@ -108,6 +116,14 @@ class BundleRiskScoringEngine:
             severity=severity.value,
             assessment_time_ms=assessment_time_ms
         )
+
+        self.version_registry.register(
+            artifact_id=risk_id,
+            artifact_type=VersionedArtifactType.RISK_ASSESSMENT,
+            model_name=self.config.model_name,
+            model_version=self.config.model_version,
+            metadata={"risk_type": RiskType.BUNDLE_BREAK.value},
+        )
         
         return risk_assessment
     
@@ -168,6 +184,14 @@ class BundleRiskScoringEngine:
             probability=abandonment_probability,
             severity=severity.value,
             assessment_time_ms=assessment_time_ms
+        )
+
+        self.version_registry.register(
+            artifact_id=risk_id,
+            artifact_type=VersionedArtifactType.RISK_ASSESSMENT,
+            model_name=self.config.model_name,
+            model_version=self.config.model_version,
+            metadata={"risk_type": RiskType.REFILL_ABANDONMENT.value},
         )
         
         return risk_assessment

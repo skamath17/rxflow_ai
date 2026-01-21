@@ -36,13 +36,20 @@ from ..models.explainability import (
     DriverImpact,
     VisualizationType,
 )
+from ..utils.version_registry import VersionRegistry
+from ..models.versioning import VersionedArtifactType
 
 
 class BundleRiskExplainabilityEngine:
     """Generates explainability artifacts for bundle risk assessments."""
 
-    def __init__(self, config: Optional[ExplainabilityConfig] = None):
+    def __init__(
+        self,
+        config: Optional[ExplainabilityConfig] = None,
+        version_registry: Optional[VersionRegistry] = None,
+    ):
         self.config = config or ExplainabilityConfig()
+        self.version_registry = version_registry or VersionRegistry()
         self._explanations: Dict[str, BundleRiskExplanation] = {}
         self._bundle_index: Dict[str, List[str]] = {}
 
@@ -141,6 +148,14 @@ class BundleRiskExplainabilityEngine:
         self._explanations[explanation_id] = explanation
         if explanation.bundle_id != "unknown":
             self._bundle_index.setdefault(explanation.bundle_id, []).append(explanation_id)
+
+        self.version_registry.register(
+            artifact_id=explanation_id,
+            artifact_type=VersionedArtifactType.EXPLANATION,
+            model_name=self.config.model_name,
+            model_version=self.config.model_version,
+            metadata={"risk_type": risk_type.value},
+        )
         return explanation
 
     def _explain_drivers(self, drivers: List[RiskDriver]) -> List[RiskDriverExplanation]:

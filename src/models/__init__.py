@@ -29,6 +29,8 @@ from .explainability import (
     RecommendationExplanation,
 )
 
+from .versioning import VersionRecord, VersionedArtifactType
+
 __all__ = [
     "EventType",
     "EventSource", 
@@ -48,5 +50,7 @@ __all__ = [
     "ExplanationType",
     "ExplainabilityConfig",
     "RiskDriverExplanation",
-    "RecommendationExplanation"
+    "RecommendationExplanation",
+    "VersionRecord",
+    "VersionedArtifactType"
 ]
