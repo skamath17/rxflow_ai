@@ -17,6 +17,18 @@ from .events import (
     create_canonical_event
 )
 
+from .explainability import (
+    BundleRiskExplanation,
+    Evidence,
+    EvidenceType,
+    ExplanationList,
+    ExplanationQuery,
+    ExplanationType,
+    ExplainabilityConfig,
+    RiskDriverExplanation,
+    RecommendationExplanation,
+)
+
 __all__ = [
     "EventType",
     "EventSource", 
@@ -27,5 +39,14 @@ __all__ = [
     "PAEvent",
     "OSEvent",
     "BundleEvent",
-    "create_canonical_event"
+    "create_canonical_event",
+    "BundleRiskExplanation",
+    "Evidence",
+    "EvidenceType",
+    "ExplanationList",
+    "ExplanationQuery",
+    "ExplanationType",
+    "ExplainabilityConfig",
+    "RiskDriverExplanation",
+    "RecommendationExplanation"
 ]
