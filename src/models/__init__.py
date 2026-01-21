@@ -31,6 +31,7 @@ from .explainability import (
 
 from .versioning import VersionRecord, VersionedArtifactType
 from .recommendation import BundleRecommendation, RecommendationActionType, RecommendationPriority
+from .guardrails import ApprovalDecision, ApprovalStatus
 
 __all__ = [
     "EventType",
@@ -56,5 +57,7 @@ __all__ = [
     "VersionedArtifactType",
     "BundleRecommendation",
     "RecommendationActionType",
-    "RecommendationPriority"
+    "RecommendationPriority",
+    "ApprovalDecision",
+    "ApprovalStatus"
 ]
