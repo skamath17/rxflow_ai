@@ -30,6 +30,7 @@ from .explainability import (
 )
 
 from .versioning import VersionRecord, VersionedArtifactType
+from .recommendation import BundleRecommendation, RecommendationActionType, RecommendationPriority
 
 __all__ = [
     "EventType",
@@ -52,5 +53,8 @@ __all__ = [
     "RiskDriverExplanation",
     "RecommendationExplanation",
     "VersionRecord",
-    "VersionedArtifactType"
+    "VersionedArtifactType",
+    "BundleRecommendation",
+    "RecommendationActionType",
+    "RecommendationPriority"
 ]
