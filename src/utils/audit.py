@@ -27,6 +27,8 @@ class AuditAction(str, Enum):
     SNAPSHOT_UPDATED = "snapshot_updated"
     METRICS_COMPUTED = "metrics_computed"
     METRICS_QUERIED = "metrics_queried"
+    RISK_ASSESSMENT = "risk_assessment"
+    RISK_QUERY = "risk_query"
 
 
 class AuditSeverity(str, Enum):
@@ -49,6 +51,7 @@ class AuditRecord(BaseModel):
     member_id: Optional[str] = None
     refill_id: Optional[str] = None
     metrics_id: Optional[str] = None
+    risk_id: Optional[str] = None
     source_system: Optional[str] = None
     message: str
     details: Optional[Dict[str, Any]] = None
@@ -378,6 +381,44 @@ class AuditLogger:
             message=f"Metrics query returned {results_count} results",
             details={"query_params": query_params, "results_count": results_count},
             processing_time_ms=processing_time_ms
+        )
+        self._audit_trail.append(record)
+        return record
+    
+    def log_risk_assessment(self, risk_id: str, risk_type: str, entity_id: str,
+                           probability: float, severity: str, assessment_time_ms: int) -> AuditRecord:
+        """Log risk assessment"""
+        audit_id = self.generate_audit_id("risk")
+        record = AuditRecord(
+            audit_id=audit_id,
+            timestamp=datetime.now(timezone.utc),
+            action=AuditAction.RISK_ASSESSMENT,
+            severity=AuditSeverity.INFO,
+            risk_id=risk_id,
+            message=f"{risk_type.title()} risk assessed for {entity_id}",
+            details={
+                "risk_type": risk_type,
+                "entity_id": entity_id,
+                "probability": probability,
+                "severity": severity
+            },
+            processing_time_ms=assessment_time_ms
+        )
+        self._audit_trail.append(record)
+        return record
+    
+    def log_risk_query(self, query_params: Dict[str, Any], results_count: int,
+                        assessment_time_ms: int) -> AuditRecord:
+        """Log risk query"""
+        audit_id = self.generate_audit_id("query")
+        record = AuditRecord(
+            audit_id=audit_id,
+            timestamp=datetime.now(timezone.utc),
+            action=AuditAction.RISK_QUERY,
+            severity=AuditSeverity.INFO,
+            message=f"Risk query returned {results_count} results",
+            details={"query_params": query_params, "results_count": results_count},
+            processing_time_ms=assessment_time_ms
         )
         self._audit_trail.append(record)
         return record
