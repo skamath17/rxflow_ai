@@ -79,6 +79,21 @@ class TestEventProcessor:
 
         assert result.success is False
         assert any("pseudonymized identifier" in err for err in result.validation_errors[0]["errors"])
+
+    def test_rejects_phi_fields(self, base_event_data):
+        """Reject events containing PHI fields"""
+        processor = EventProcessor()
+
+        invalid_event = base_event_data.copy()
+        invalid_event["first_name"] = "Jane"
+
+        result = processor.process_single_event(
+            event_data=invalid_event,
+            source_system="test_system"
+        )
+
+        assert result.success is False
+        assert any("PHI field not allowed" in err for err in result.validation_errors[0]["errors"])
     
     def test_process_single_event_with_exception(self, sample_refill_event_data):
         """Test processing event that raises exception during creation"""

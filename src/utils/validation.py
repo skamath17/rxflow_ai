@@ -51,6 +51,29 @@ class EventValidator:
             "event_timestamp",
             "received_timestamp"
         }
+        self.phi_denylist_fields = {
+            "first_name",
+            "last_name",
+            "full_name",
+            "member_name",
+            "patient_name",
+            "dob",
+            "date_of_birth",
+            "birth_date",
+            "email",
+            "phone",
+            "phone_number",
+            "address",
+            "street_address",
+            "city",
+            "state",
+            "zip",
+            "postal_code",
+            "ssn",
+            "social_security_number",
+            "medical_record_number",
+            "mrn",
+        }
     
     def validate_single_event(self, event_data: Dict[str, Any]) -> ValidationResult:
         """Validate a single canonical event"""
@@ -63,6 +86,7 @@ class EventValidator:
         
         # Validate field formats
         self._validate_identifiers(event_data, result)
+        self._validate_phi_denylist(event_data, result)
         self._validate_timestamps(event_data, result)
         self._validate_event_structure(event_data, result)
         
@@ -153,6 +177,11 @@ class EventValidator:
         if re.search(r"\b\+?\d{10,15}\b", value.replace("-", "")):
             return False
         return re.fullmatch(r"[A-Za-z0-9_-]{8,}", value) is not None
+
+    def _validate_phi_denylist(self, event_data: Dict[str, Any], result: ValidationResult) -> None:
+        for field in self.phi_denylist_fields:
+            if field in event_data and event_data[field] not in (None, ""):
+                result.add_error(f"PHI field not allowed: {field}")
     
     def _validate_timestamps(self, event_data: Dict[str, Any], result: ValidationResult) -> None:
         """Validate timestamp fields"""
