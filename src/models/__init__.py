@@ -36,6 +36,7 @@ from .actions import TrackedAction, ActionStatus, ActionOutcome
 from .outcomes import BundleOutcome, OutcomeStatus, OutcomeSummary, OutcomeType
 from .work_queue import BundleRiskQueueItem, QueuePriority, QueueItemStatus
 from .case_drilldown import BundleRiskCase, DrilldownTimelineEvent, CaseStatus
+from .executive_dashboard import ExecutiveSavingsSnapshot
 
 __all__ = [
     "EventType",
@@ -76,5 +77,6 @@ __all__ = [
     "QueueItemStatus",
     "BundleRiskCase",
     "DrilldownTimelineEvent",
-    "CaseStatus"
+    "CaseStatus",
+    "ExecutiveSavingsSnapshot"
 ]
