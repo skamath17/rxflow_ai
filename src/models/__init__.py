@@ -33,6 +33,7 @@ from .versioning import VersionRecord, VersionedArtifactType
 from .recommendation import BundleRecommendation, RecommendationActionType, RecommendationPriority
 from .guardrails import ApprovalDecision, ApprovalStatus
 from .actions import TrackedAction, ActionStatus, ActionOutcome
+from .outcomes import BundleOutcome, OutcomeStatus, OutcomeSummary, OutcomeType
 
 __all__ = [
     "EventType",
@@ -63,5 +64,9 @@ __all__ = [
     "ApprovalStatus",
     "TrackedAction",
     "ActionStatus",
-    "ActionOutcome"
+    "ActionOutcome",
+    "BundleOutcome",
+    "OutcomeStatus",
+    "OutcomeSummary",
+    "OutcomeType"
 ]
