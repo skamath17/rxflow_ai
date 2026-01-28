@@ -35,6 +35,7 @@ from .guardrails import ApprovalDecision, ApprovalStatus
 from .actions import TrackedAction, ActionStatus, ActionOutcome
 from .outcomes import BundleOutcome, OutcomeStatus, OutcomeSummary, OutcomeType
 from .work_queue import BundleRiskQueueItem, QueuePriority, QueueItemStatus
+from .case_drilldown import BundleRiskCase, DrilldownTimelineEvent, CaseStatus
 
 __all__ = [
     "EventType",
@@ -72,5 +73,8 @@ __all__ = [
     "OutcomeType",
     "BundleRiskQueueItem",
     "QueuePriority",
-    "QueueItemStatus"
+    "QueueItemStatus",
+    "BundleRiskCase",
+    "DrilldownTimelineEvent",
+    "CaseStatus"
 ]
