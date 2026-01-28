@@ -38,6 +38,7 @@ from .work_queue import BundleRiskQueueItem, QueuePriority, QueueItemStatus
 from .case_drilldown import BundleRiskCase, DrilldownTimelineEvent, CaseStatus
 from .executive_dashboard import ExecutiveSavingsSnapshot
 from .simulation import SyntheticScenario, ScenarioType, ReplayConfig
+from .lineage import LineageGap, LineageReport
 
 __all__ = [
     "EventType",
@@ -82,5 +83,7 @@ __all__ = [
     "ExecutiveSavingsSnapshot",
     "SyntheticScenario",
     "ScenarioType",
-    "ReplayConfig"
+    "ReplayConfig",
+    "LineageGap",
+    "LineageReport"
 ]
