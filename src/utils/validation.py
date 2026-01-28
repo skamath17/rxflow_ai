@@ -5,6 +5,7 @@ Comprehensive validation for canonical events and batches.
 """
 
 from datetime import datetime, timezone
+import re
 from typing import Dict, Any, List, Tuple, Optional
 from pydantic import ValidationError
 
@@ -115,14 +116,43 @@ class EventValidator:
                 value = event_data[field]
                 if not isinstance(value, str) or len(value) < 8:
                     result.add_error(f"{field} must be a string of at least 8 characters")
-                if not value.replace("_", "").replace("-", "").isalnum():
-                    result.add_warning(f"{field} contains non-alphanumeric characters")
+                if not self._is_pseudonymous_id(value):
+                    result.add_error(f"{field} must be a pseudonymized identifier")
         
         # Optional bundle_id validation
         if "bundle_id" in event_data and event_data["bundle_id"]:
             bundle_id = event_data["bundle_id"]
             if not isinstance(bundle_id, str) or len(bundle_id) < 8:
                 result.add_error("bundle_id must be a string of at least 8 characters")
+            if not self._is_pseudonymous_id(bundle_id):
+                result.add_error("bundle_id must be a pseudonymized identifier")
+
+        member_refills = event_data.get("member_refills") or []
+        if isinstance(member_refills, list):
+            for idx, member_refill in enumerate(member_refills):
+                if not isinstance(member_refill, dict):
+                    result.add_error(f"member_refills[{idx}] must be an object")
+                    continue
+                for field in ("member_id", "refill_id"):
+                    value = member_refill.get(field)
+                    if value is None:
+                        continue
+                    if not isinstance(value, str) or len(value) < 8:
+                        result.add_error(f"member_refills[{idx}].{field} must be a string of at least 8 characters")
+                    elif not self._is_pseudonymous_id(value):
+                        result.add_error(f"member_refills[{idx}].{field} must be a pseudonymized identifier")
+
+    @staticmethod
+    def _is_pseudonymous_id(value: str) -> bool:
+        if not value:
+            return False
+        if "@" in value:
+            return False
+        if re.search(r"\b\d{3}-\d{2}-\d{4}\b", value):
+            return False
+        if re.search(r"\b\+?\d{10,15}\b", value.replace("-", "")):
+            return False
+        return re.fullmatch(r"[A-Za-z0-9_-]{8,}", value) is not None
     
     def _validate_timestamps(self, event_data: Dict[str, Any], result: ValidationResult) -> None:
         """Validate timestamp fields"""

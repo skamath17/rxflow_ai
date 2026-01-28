@@ -79,7 +79,7 @@ class TestRefillEvent:
         """Test that refill event inherits from base event"""
         event = RefillEvent(**sample_refill_event_data)
         assert isinstance(event, BaseCanonicalEvent)
-        assert event.member_id == "mem_1234567890abcdef"
+        assert event.member_id == sample_refill_event_data["member_id"]
         assert event.event_source == EventSource.CENTERSYNC
 
 
@@ -99,7 +99,7 @@ class TestPAEvent:
         """Test that PA event inherits from base event"""
         event = PAEvent(**sample_pa_event_data)
         assert isinstance(event, BaseCanonicalEvent)
-        assert event.member_id == "mem_1234567890abcdef"
+        assert event.member_id == sample_pa_event_data["member_id"]
 
 
 class TestOSEvent:
@@ -137,8 +137,8 @@ class TestBundleEvent:
         """Test bundle event member refills structure"""
         event = BundleEvent(**sample_bundle_event_data)
         assert len(event.member_refills) == 2
-        assert event.member_refills[0]["member_id"] == "mem_123"
-        assert event.member_refills[0]["refill_id"] == "ref_456"
+        assert event.member_refills[0]["member_id"].startswith("mem_")
+        assert event.member_refills[0]["refill_id"].startswith("ref_")
     
     def test_bundle_event_inheritance(self, sample_bundle_event_data):
         """Test that bundle event inherits from base event"""

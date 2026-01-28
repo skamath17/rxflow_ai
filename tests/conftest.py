@@ -128,8 +128,8 @@ def sample_bundle_event_data(base_event_data, sample_utc_datetime):
         "bundle_formed_date": sample_utc_datetime.isoformat(),
         "bundle_ship_date": sample_utc_datetime.isoformat(),
         "member_refills": [
-            {"member_id": "mem_123", "refill_id": "ref_456"},
-            {"member_id": "mem_789", "refill_id": "ref_012"}
+            {"member_id": "mem_12345678abcd", "refill_id": "ref_4567890abcd"},
+            {"member_id": "mem_7890abcd1234", "refill_id": "ref_01234567abcd"}
         ],
         "total_refills": 5,
         "total_members": 3,
