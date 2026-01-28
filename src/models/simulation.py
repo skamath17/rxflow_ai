@@ -27,3 +27,16 @@ class SyntheticScenario(BaseModel):
 
     class Config:
         json_encoders = {datetime: lambda v: v.isoformat()}
+
+
+class UniformRange(BaseModel):
+    """Uniform range used for simulation sampling."""
+    minimum: float
+    maximum: float
+
+
+class SimulationConfig(BaseModel):
+    """Configurable distributions for synthetic scenarios."""
+    pa_processing_days: UniformRange = Field(default_factory=lambda: UniformRange(minimum=2, maximum=7))
+    oos_duration_days: UniformRange = Field(default_factory=lambda: UniformRange(minimum=1, maximum=5))
+    refill_gap_days: UniformRange = Field(default_factory=lambda: UniformRange(minimum=20, maximum=35))

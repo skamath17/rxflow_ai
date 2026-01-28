@@ -1,7 +1,7 @@
 """Tests for synthetic scenario generator."""
 
 from src.simulation.scenario_generator import ScenarioGenerator
-from src.models.simulation import ScenarioType
+from src.models.simulation import ScenarioType, SimulationConfig, UniformRange
 from src.simulation.snapshot_builder import build_snapshot_and_metrics
 
 
@@ -28,3 +28,16 @@ def test_generate_oos_split():
     scenario = generator.generate(ScenarioType.OOS_DRIVEN_SPLIT, bundle_size=2)
     assert scenario.events
     assert scenario.scenario_type == ScenarioType.OOS_DRIVEN_SPLIT
+
+
+def test_generate_with_custom_ranges():
+    config = SimulationConfig(
+        pa_processing_days=UniformRange(minimum=3, maximum=3),
+        oos_duration_days=UniformRange(minimum=2, maximum=2),
+        refill_gap_days=UniformRange(minimum=25, maximum=25),
+    )
+    generator = ScenarioGenerator(config=config)
+    scenario = generator.generate(ScenarioType.PA_DELAYED_SPLIT, bundle_size=1)
+    pa_events = [event for event in scenario.events if getattr(event, "pa_processing_days", None) is not None]
+    assert pa_events
+    assert pa_events[0].pa_processing_days == 3

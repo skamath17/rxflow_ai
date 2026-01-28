@@ -7,6 +7,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime, timedelta, timezone
 from typing import List
+import random
 
 from ..models.events import (
     BaseCanonicalEvent,
@@ -16,14 +17,15 @@ from ..models.events import (
     RefillStatus,
     create_canonical_event,
 )
-from ..models.simulation import ScenarioType, SyntheticScenario
+from ..models.simulation import ScenarioType, SyntheticScenario, SimulationConfig
 
 
 class ScenarioGenerator:
     """Generate synthetic bundle scenarios with canonical events."""
 
-    def __init__(self, base_time: datetime | None = None):
+    def __init__(self, base_time: datetime | None = None, config: SimulationConfig | None = None):
         self.base_time = base_time or datetime.now(timezone.utc)
+        self.config = config or SimulationConfig()
 
     def generate(self, scenario_type: ScenarioType, bundle_size: int = 2) -> SyntheticScenario:
         if scenario_type == ScenarioType.CLEAN_BUNDLE:
@@ -62,6 +64,7 @@ class ScenarioGenerator:
 
     def _generate_pa_delayed_split(self, bundle_size: int) -> List[BaseCanonicalEvent]:
         events = []
+        pa_days = self._sample_range(self.config.pa_processing_days)
         for idx in range(bundle_size):
             time_offset = timedelta(hours=idx * 3)
             events.extend(self._refill_lifecycle_events(idx, time_offset, status=RefillStatus.PROCESSING))
@@ -75,7 +78,7 @@ class ScenarioGenerator:
             "event_timestamp": (self.base_time + timedelta(hours=6)).isoformat(),
             "received_timestamp": (self.base_time + timedelta(hours=6)).isoformat(),
             "pa_status": PAStatus.SUBMITTED.value,
-            "pa_processing_days": 5,
+            "pa_processing_days": pa_days,
         })
         events.append(pa_event)
         events.append(self._bundle_event(EventType.BUNDLE_SPLIT, bundle_size))
@@ -83,6 +86,7 @@ class ScenarioGenerator:
 
     def _generate_oos_split(self, bundle_size: int) -> List[BaseCanonicalEvent]:
         events = []
+        oos_days = self._sample_range(self.config.oos_duration_days)
         for idx in range(bundle_size):
             time_offset = timedelta(hours=idx * 3)
             events.extend(self._refill_lifecycle_events(idx, time_offset, status=RefillStatus.BUNDLED))
@@ -97,7 +101,7 @@ class ScenarioGenerator:
             "received_timestamp": (self.base_time + timedelta(hours=8)).isoformat(),
             "oos_status": "detected",
             "oos_reason": "inventory_shortage",
-            "oos_duration_days": 4,
+            "oos_duration_days": oos_days,
         })
         events.append(oos_event)
         events.append(self._bundle_event(EventType.BUNDLE_SPLIT, bundle_size))
@@ -110,6 +114,7 @@ class ScenarioGenerator:
         status: RefillStatus,
     ) -> List[BaseCanonicalEvent]:
         base_time = self.base_time + time_offset
+        gap_days = self._sample_range(self.config.refill_gap_days)
         bundle_id = self._bundle_id()
         events = [
             create_canonical_event({
@@ -122,6 +127,7 @@ class ScenarioGenerator:
                 "event_timestamp": base_time.isoformat(),
                 "received_timestamp": base_time.isoformat(),
                 "refill_status": RefillStatus.PENDING.value,
+                "days_since_last_fill": gap_days,
             }),
             create_canonical_event({
                 "event_id": self._event_id("refill_eligible", idx),
@@ -133,6 +139,7 @@ class ScenarioGenerator:
                 "event_timestamp": (base_time + timedelta(hours=1)).isoformat(),
                 "received_timestamp": (base_time + timedelta(hours=1)).isoformat(),
                 "refill_status": RefillStatus.ELIGIBLE.value,
+                "days_until_due": max(0, gap_days - 5),
             }),
         ]
         if status in {RefillStatus.BUNDLED, RefillStatus.SHIPPED, RefillStatus.PROCESSING}:
@@ -194,3 +201,7 @@ class ScenarioGenerator:
 
     def _bundle_id(self) -> str:
         return "bundle_synthetic"
+
+    @staticmethod
+    def _sample_range(range_config) -> int:
+        return int(random.uniform(range_config.minimum, range_config.maximum))
