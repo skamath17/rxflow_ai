@@ -23,9 +23,15 @@ from ..models.simulation import ScenarioType, SyntheticScenario, SimulationConfi
 class ScenarioGenerator:
     """Generate synthetic bundle scenarios with canonical events."""
 
-    def __init__(self, base_time: datetime | None = None, config: SimulationConfig | None = None):
+    def __init__(
+        self,
+        base_time: datetime | None = None,
+        config: SimulationConfig | None = None,
+        seed: int | None = None,
+    ):
         self.base_time = base_time or datetime.now(timezone.utc)
         self.config = config or SimulationConfig()
+        self._rng = random.Random(seed) if seed is not None else random.Random()
 
     def generate(self, scenario_type: ScenarioType, bundle_size: int = 2) -> SyntheticScenario:
         if scenario_type == ScenarioType.CLEAN_BUNDLE:
@@ -191,7 +197,7 @@ class ScenarioGenerator:
         })
 
     def _event_id(self, prefix: str, idx: int) -> str:
-        return f"{prefix}_{idx}_{uuid.uuid4().hex[:6]}"
+        return f"{prefix}_{idx}_{self._random_suffix()}"
 
     def _member_id(self, idx: int) -> str:
         return f"member_{idx:02d}_synthetic"
@@ -202,6 +208,8 @@ class ScenarioGenerator:
     def _bundle_id(self) -> str:
         return "bundle_synthetic"
 
-    @staticmethod
-    def _sample_range(range_config) -> int:
-        return int(random.uniform(range_config.minimum, range_config.maximum))
+    def _random_suffix(self) -> str:
+        return f"{self._rng.getrandbits(24):06x}"
+
+    def _sample_range(self, range_config) -> int:
+        return int(self._rng.uniform(range_config.minimum, range_config.maximum))

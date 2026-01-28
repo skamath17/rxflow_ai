@@ -40,3 +40,12 @@ class SimulationConfig(BaseModel):
     pa_processing_days: UniformRange = Field(default_factory=lambda: UniformRange(minimum=2, maximum=7))
     oos_duration_days: UniformRange = Field(default_factory=lambda: UniformRange(minimum=1, maximum=5))
     refill_gap_days: UniformRange = Field(default_factory=lambda: UniformRange(minimum=20, maximum=35))
+
+
+class ReplayConfig(BaseModel):
+    """Seed and configuration for deterministic scenario replay."""
+    scenario_type: ScenarioType
+    bundle_size: int = 2
+    seed: int = 0
+    simulation_config: SimulationConfig = Field(default_factory=SimulationConfig)
+    base_time: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

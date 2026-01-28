@@ -37,7 +37,7 @@ from .outcomes import BundleOutcome, OutcomeStatus, OutcomeSummary, OutcomeType
 from .work_queue import BundleRiskQueueItem, QueuePriority, QueueItemStatus
 from .case_drilldown import BundleRiskCase, DrilldownTimelineEvent, CaseStatus
 from .executive_dashboard import ExecutiveSavingsSnapshot
-from .simulation import SyntheticScenario, ScenarioType
+from .simulation import SyntheticScenario, ScenarioType, ReplayConfig
 
 __all__ = [
     "EventType",
@@ -81,5 +81,6 @@ __all__ = [
     "CaseStatus",
     "ExecutiveSavingsSnapshot",
     "SyntheticScenario",
-    "ScenarioType"
+    "ScenarioType",
+    "ReplayConfig"
 ]
