@@ -34,6 +34,7 @@ from .recommendation import BundleRecommendation, RecommendationActionType, Reco
 from .guardrails import ApprovalDecision, ApprovalStatus
 from .actions import TrackedAction, ActionStatus, ActionOutcome
 from .outcomes import BundleOutcome, OutcomeStatus, OutcomeSummary, OutcomeType
+from .work_queue import BundleRiskQueueItem, QueuePriority, QueueItemStatus
 
 __all__ = [
     "EventType",
@@ -68,5 +69,8 @@ __all__ = [
     "BundleOutcome",
     "OutcomeStatus",
     "OutcomeSummary",
-    "OutcomeType"
+    "OutcomeType",
+    "BundleRiskQueueItem",
+    "QueuePriority",
+    "QueueItemStatus"
 ]
